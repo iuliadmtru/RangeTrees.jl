@@ -1,0 +1,4 @@
+name = "RangeTrees"
+uuid = "e0f2e492-6013-4161-9c01-7f8b0fb75dfe"
+authors = ["Iulia Dumitru <iuliadmtru@gmail.com>"]
+version = "0.1.0"
