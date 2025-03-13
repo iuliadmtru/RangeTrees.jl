@@ -2,3 +2,9 @@ name = "RangeTrees"
 uuid = "e0f2e492-6013-4161-9c01-7f8b0fb75dfe"
 authors = ["Iulia Dumitru <iuliadmtru@gmail.com>"]
 version = "0.1.0"
+
+[deps]
+AbstractTrees = "1520ce14-60c1-5f80-bbc7-55ef81b5835c"
+
+[compat]
+AbstractTrees = "0.4.5"
