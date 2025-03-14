@@ -17,11 +17,11 @@ mutable struct RangeNode{T} <: AbstractNode{T}
     right::Union{RangeNode, Nothing}
     parent::Union{RangeNode, Nothing}
     max::Int
-    data::T # Extra data. In our case, the corresponding `GreenNode`.
+    data::T # [optional] Extra data to store in the node.
 end
 
-function RangeNode(interval::UnitRange, parent::RangeNode, data::T) where T
-    return RangeNode(
+function RangeNode(interval::UnitRange, parent::Union{RangeNode, Nothing}, data::T) where T
+    new_node = RangeNode(
         interval,
         nothing,
         nothing,
@@ -29,6 +29,9 @@ function RangeNode(interval::UnitRange, parent::RangeNode, data::T) where T
         interval.stop,
         data
     )
+    insert!(parent, new_node)
+
+    return new_node
 end
 RangeNode(interval::UnitRange, parent::RangeNode) = RangeNode(interval, parent, nothing)
 
@@ -63,7 +66,6 @@ nodedata(node::RangeNode) = node.data
 
 function Base.insert!(root::Union{RangeNode, Nothing}, interval::UnitRange, data::T) where T
     if isnothing(root)
-        @info "Here"
         return RangeNode(interval, data)
     end
 
@@ -86,6 +88,45 @@ function Base.insert!(root::Union{RangeNode, Nothing}, interval::UnitRange, data
             return root
         else
             insert!(root.right, interval, data)
+        end
+    end
+
+    if root.max < interval.stop
+        root.max = interval.stop
+    end
+
+    return root
+end
+
+function Base.insert!(root::Union{RangeNode, Nothing}, node::RangeNode)
+    if isnothing(root)
+        return node
+    end
+
+    left = root.left
+    right = root.right
+    interval = node.interval
+    if interval.start < root.interval.start
+        if isnothing(left)
+            root.left = node
+        elseif left.interval.start == interval.start && left.interval.stop == interval.stop
+            @info "Node already exists -- updating data."
+            root.left.data = node.data
+
+            return root
+        else
+            insert!(root.left, node)
+        end
+    else
+        if isnothing(right)
+            root.right = node
+        elseif right.interval.start == interval.start && right.interval.stop == interval.stop
+            @info "Node already exists -- updating data."
+            root.right.data = node.data
+
+            return root
+        else
+            insert!(root.right, node)
         end
     end
 
