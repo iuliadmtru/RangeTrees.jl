@@ -53,7 +53,9 @@ RangeNode(interval::UnitRange) = RangeNode(interval, nothing)
     Getters and setters.
 =#
 
-AbstractTrees.children(node::RangeNode) = [node.left, node.right]
+AbstractTrees.children(node::RangeNode) =
+    isnothing(node.left) && isnothing(node.right) ? RangeNode[]  :
+    isnothing(node.left)                          ? [node.right] : [node.left]
 
 AbstractTrees.nodevalue(node::RangeNode) = node.interval
 
