@@ -175,7 +175,7 @@ end
     i1.start ................... i1.stop
     i2.start ................... i2.stop
 =#
-function _overlapping(i1::UnitRange, i2::UnitRange)
+function overlapping(i1::UnitRange, i2::UnitRange)
     return i1.start <= i2.stop && i2.start <= i1.stop
 end
 
@@ -188,7 +188,7 @@ function find_nodes(root::Union{RangeNode, Nothing}, interval::UnitRange)
     end
 
     nodes = RangeNode[]
-    if root.interval == interval
+    if overlapping(root.interval, interval)
         push!(nodes, root)
     end
 
@@ -200,7 +200,7 @@ function find_nodes(root::Union{RangeNode, Nothing}, interval::UnitRange)
     # Search for the child containing the interval.
     while !isempty(st)
         child = pop!(st)
-        if _overlapping(child.interval, interval)
+        if overlapping(child.interval, interval)
             push!(nodes, child)
         end
     end
