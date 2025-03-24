@@ -51,6 +51,7 @@ function RangeNode(interval::UnitRange, data::T) where T
 end
 RangeNode(interval::UnitRange) = RangeNode(interval, nothing)
 
+# TODO: This results in a linked list. (How) Can it be balanced?
 function RangeNode(ast::JuliaLowering.SyntaxTree; parent::Union{RangeNode, Nothing}=nothing)
     root = RangeNode(JuliaLowering.first_byte(ast):JuliaLowering.last_byte(ast), parent, ast)
 
