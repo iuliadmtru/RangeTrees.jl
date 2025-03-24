@@ -4,7 +4,7 @@ module RangeTrees
 # Might be useful: https://github.com/JuliaMath/IntervalSets.jl
 
 export RangeNode
-export find_node
+export find_node, find_nodes
 
 using AbstractTrees
 

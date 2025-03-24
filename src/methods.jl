@@ -135,10 +135,75 @@ function Base.:(==)(node1::RangeNode, node2::RangeNode)
     return true
 end
 
-# function findnode(root::Union{RangeNode, Nothing}, node::RangeNode)
-#     if isnothing(root)
-#         return nothing
-#     end
+function find_node(root::Union{RangeNode, Nothing}, node::RangeNode)
+    if isnothing(root)
+        return nothing
+    end
+    if root == node
+        return root
+    end
 
+    # Store all nodes in a stack.
+    st = Stack{RangeNode}()
+    for child in children(root)
+        !isnothing(child) && push!(st, PostOrderDFS(child)...)
+    end
+    # Search for the node.
+    while !isempty(st)
+        child = pop!(st)
+        if child == node
+            return child
+        end
+    end
 
-# end
+    return nothing
+end
+
+#=
+    i1.start ................... i1.stop
+                i2.start ................. i2.stop
+
+            i1.start ................... i1.stop
+    i2.start ................. i2.stop
+
+    i1.start ................... i1.stop
+            i2.start ... i2.stop
+
+            i1.start ... i1.stop
+    i2.start ................... i2.stop
+
+    i1.start ................... i1.stop
+    i2.start ................... i2.stop
+=#
+function _overlapping(i1::UnitRange, i2::UnitRange)
+    return i1.start <= i2.stop && i2.start <= i1.stop
+end
+
+"""
+    Find all nodes overlapping with `interval`.
+"""
+function find_nodes(root::Union{RangeNode, Nothing}, interval::UnitRange)
+    if isnothing(root)
+        return nothing
+    end
+
+    nodes = RangeNode[]
+    if root.interval == interval
+        push!(nodes, root)
+    end
+
+    # Store all nodes in a stack.
+    st = Stack{RangeNode}()
+    for child in children(root)
+        !isnothing(child) && push!(st, PostOrderDFS(child)...)
+    end
+    # Search for the child containing the interval.
+    while !isempty(st)
+        child = pop!(st)
+        if _overlapping(child.interval, interval)
+            push!(nodes, child)
+        end
+    end
+
+    return nodes
+end
