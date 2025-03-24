@@ -207,3 +207,29 @@ function find_nodes(root::Union{RangeNode, Nothing}, interval::UnitRange)
 
     return nodes
 end
+
+"""
+    Find the innermost node overlapping with `interval`.
+"""
+function find_node(root::Union{RangeNode{JuliaLowering.SyntaxTree{T}}, Nothing}, interval::UnitRange) where T
+    return find_nodes(root, interval)[end]
+end
+
+"""
+    Find the innermost node at `position`.
+"""
+function find_node(root::Union{RangeNode{JuliaLowering.SyntaxTree{T}}, Nothing}, position::Tuple{Int, Int}) where T
+    line, col = position
+    source_file = root.data.source.file
+    source_code = source_file.code
+
+    # Get the line start byte.
+    line_byte = source_file.line_starts[line]
+    # Find the byte corresponding to the position.
+    line_str = readlines(IOBuffer(source_code))[line]
+    col_byte = collect(eachindex(line_str))[col]
+    pos_byte = line_byte + col_byte
+
+    # Find the node.
+    return find_node(root, pos_byte:pos_byte)
+end
