@@ -7,6 +7,7 @@ export RangeNode
 export find_node, find_nodes
 
 using AbstractTrees
+using JuliaLowering
 
 #=
     Definition and constructors.
@@ -49,6 +50,25 @@ function RangeNode(interval::UnitRange, data::T) where T
     )
 end
 RangeNode(interval::UnitRange) = RangeNode(interval, nothing)
+
+function RangeNode(ast::JuliaLowering.SyntaxTree; parent::Union{RangeNode, Nothing}=nothing)
+    root = RangeNode(JuliaLowering.first_byte(ast):JuliaLowering.last_byte(ast), parent, ast)
+
+    if isnothing(JuliaLowering.children(ast))
+        # @info "return no children" root
+        return root
+    end
+
+    for child in JuliaLowering.children(ast)
+        child_node = RangeNode(child; parent=root)
+        # @info "here" child_node
+        insert!(root, child_node)
+    end
+    # @info "finished children for" ast
+
+    # @info "return" root
+    return root
+end
 
 #=
     Getters and setters.
