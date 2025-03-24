@@ -1,7 +1,7 @@
 name = "RangeTrees"
 uuid = "e0f2e492-6013-4161-9c01-7f8b0fb75dfe"
-version = "0.1.0"
 authors = ["Iulia Dumitru <iuliadmtru@gmail.com>"]
+version = "0.1.0"
 
 [deps]
 AbstractTrees = "1520ce14-60c1-5f80-bbc7-55ef81b5835c"
@@ -9,6 +9,7 @@ DataStructures = "864edb3b-99cc-5e75-8d2d-829cb0a9cfe8"
 JuliaLowering = "f3c80556-a63f-4383-b822-37d64f81a311"
 JuliaSyntax = "70703baa-626e-46a2-a12c-08ffd08c73b4"
 Revise = "295af30f-e4ad-537b-8983-00126c2a3abe"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [compat]
 AbstractTrees = "0.4.5"
@@ -16,3 +17,4 @@ DataStructures = "0.18.20"
 JuliaLowering = "1.0.0"
 JuliaSyntax = "1.0.2"
 Revise = "3.7.2"
+Test = "1.11.0"
