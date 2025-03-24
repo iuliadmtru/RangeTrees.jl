@@ -4,6 +4,7 @@ module RangeTrees
 # Might be useful: https://github.com/JuliaMath/IntervalSets.jl
 
 export RangeNode
+export find_node
 
 using AbstractTrees
 
@@ -55,7 +56,8 @@ RangeNode(interval::UnitRange) = RangeNode(interval, nothing)
 
 AbstractTrees.children(node::RangeNode) =
     isnothing(node.left) && isnothing(node.right) ? RangeNode[]  :
-    isnothing(node.left)                          ? [node.right] : [node.left]
+    isnothing(node.left)                          ? [node.right] :
+    isnothing(node.right)                         ? [node.left]  : [node.left, node.right]
 
 AbstractTrees.nodevalue(node::RangeNode) = node.interval
 
